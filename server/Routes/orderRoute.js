@@ -1,60 +1,51 @@
-const express = require("express")
-const router = express.Router()
-const Order = require("../Models/orderSchema")
+const express = require("express");
+const router = express.Router();
+const Order = require("../Models/orderSchema");
+const Product = require("../Models/productSchema"); // Assuming you have a Product model
 
 
-router.get("/allOrders", async (req, res)=>{
-    try {
-        const result = await Order.find()
-        if (result.length == 0){
-            res.status(404).json("Orders not found")
-        }else {
-        res.send({msg:"list of Orders", result})}
-    } catch (error) {
-        console.log(error)
-        res.status(500).json("Internal server error")
+router.post("/addOrder", async (req, res) => {
+  try {
+    const { userId, productId, quantity } = req.body;
+
+   
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ msg: "Product not found" });
     }
-})
 
-router.post("/addOrder", async (req, res)=>{
-    try {
-        const newOrder = {
-            product: req.body.product,
-            name: req.body.name,
-            quantity: req.body.quantity,
-            price: req.body.price,
-            image:req.body.image,
-            totalPrice:req.body.totalPrice
-        }
-        await Order.create(newOrder)
-        res.send({msg:"Order created", newOrder})
-        
-    } catch (error) {
-        console.log(error)
-        res.status(500).json("Internal server error")
-    }
-})
-router.delete("/deleteOrder/:id", async (req, res)=>{
-    try {
-        const id = req.params.id
-        const result = await Order.findByIdAndDelete({_id: id})
-        if (result.length == 0){
-            res.status(404).json("order not found")
-        }else {
-        res.send({msg: "Order deleted", result})}
-    } catch (error) {
-        console.log(error)
-        res.status(500).json("Internal server error")}
-    })
+  
+    const totalPrice = product.price * quantity;
 
-    router.put("/updateOrder/:id", async (req, res)=>{
-        try {
-            const id = req.params.id
-            const result = await Order.findByIdAndUpdate({_id:id}, {...req.body},{new :true})
-            res.send({msg:"Order updated", result})
-        } catch (error) {
-            console.log(error)
-            res.status(500).json("Internal server error")
-        }
-    })
-module.exports = router
+    
+    const newOrder = new Order({
+      userId,
+      product: productId,
+      name: product.name,
+      quantity,
+      price: product.price,
+      image: product.image,
+      totalPrice,
+    });
+
+   
+    await newOrder.save();
+    res.status(201).json({ msg: "Order placed successfully", newOrder });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Internal server error" });
+  }
+});
+
+
+router.get("/allOrders", async (req, res) => {
+  try {
+    const orders = await Order.find().populate("product"); // Populate the product data
+    res.status(200).json({ msg: "Orders fetched", orders });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Internal server error" });
+  }
+});
+
+module.exports = router;
