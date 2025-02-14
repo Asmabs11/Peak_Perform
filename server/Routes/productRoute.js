@@ -58,5 +58,18 @@ router.delete("/deleteProduct/:id", async (req, res)=>{
             res.status(500).json("Internal server error")
         }
     })
+    router.get("/findCategry/:category", async (req, res)=>{
+        try {
+        const category = req.params.category
+        const result = await Product.find({category:category})
+        if (result.length === 0) {
+            return res.status(404).json({ msg: "No products found in this category" });
+          }
+          res.status(200).json({ msg: "Products found", result });
+        } catch (error) {
+          console.error(error);
+          res.status(500).json("Internal server error" );
+        }
+    })
 
 module.exports = router

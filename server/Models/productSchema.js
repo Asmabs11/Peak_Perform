@@ -1,3 +1,4 @@
+const { stringify } = require("ajv")
 const mongoose = require("mongoose")
 
 const productSchema = new mongoose.Schema({
@@ -17,7 +18,10 @@ const productSchema = new mongoose.Schema({
         type: String, required: true 
     }, 
     brand: { 
-        type: String }
+        type: String },
+     category:{
+            type:String,  required: true,  enum: ['clothes', 'shoes', 'accessories']
+        }
 })
 
 
