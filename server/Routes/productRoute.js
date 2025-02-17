@@ -24,7 +24,8 @@ router.post("/addProduct", async (req, res)=>{
             price: req.body.price,
             stock: req.body.stock,
             image:req.body.image,
-            brand:req.body.brand
+            brand:req.body.brand,
+            category: req.body.category
         }
         await Product.create(newProduct)
         res.send({msg:"Product created", newProduct})
@@ -58,7 +59,7 @@ router.delete("/deleteProduct/:id", async (req, res)=>{
             res.status(500).json("Internal server error")
         }
     })
-    router.get("/findCategry/:category", async (req, res)=>{
+    router.get("/findCategory/:category", async (req, res)=>{
         try {
         const category = req.params.category
         const result = await Product.find({category:category})
