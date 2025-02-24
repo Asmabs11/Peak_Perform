@@ -9,6 +9,8 @@ const productRoute = require("./Routes/productRoute")
 app.use("/products", productRoute)
 const orderRoute = require("./Routes/orderRoute")
 app.use("/orders", orderRoute)
+const adminRoute = require("./Routes/adminRoute")
+app.use("/admin", adminRoute)
 connectDb()
 
 app.get('/' , (req, res)=>{

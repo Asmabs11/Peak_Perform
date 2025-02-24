@@ -87,9 +87,10 @@ router.put("/updateUser/:id", async (req, res)=>{
     }
 })
 
-router.get("/isAuth", isAuth, (req, res)=>{
-    res.send({user: req.user})
-})
+router.get("/isAuth", isAuth, (req, res) => {
+    res.send({ user: req.user });
+});
+
 
 
 
