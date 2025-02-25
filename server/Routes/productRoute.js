@@ -1,6 +1,8 @@
 const express = require("express")
 const router = express.Router()
 const Product = require("../Models/productSchema")
+const isAuth = require("../Middleware/isAuth")
+const isAdmin = require("../Middleware/isAdmin")
 
 
 router.get("/allProducts", async (req, res)=>{
@@ -17,6 +19,7 @@ router.get("/allProducts", async (req, res)=>{
 })
 
 router.post("/addProduct", async (req, res)=>{
+//router.post("/addProduct", isAuth, isAdmin, async (req, res)=>{
     try {
         const newProduct = {
             name: req.body.name,
