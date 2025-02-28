@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+const cors = require("cors")
+app.use(cors())
 const connectDb =  require("./Config/connectDb")
 app.use(express.json())
 const userRoute = require("./Routes/userRoute")
@@ -11,6 +13,9 @@ const orderRoute = require("./Routes/orderRoute")
 app.use("/orders", orderRoute)
 const adminRoute = require("./Routes/adminRoute")
 app.use("/admin", adminRoute)
+const uploadRoutes = require("./Routes/uploadsRoute"); 
+app.use("/uploads", uploadRoutes);
+
 connectDb()
 
 app.get('/' , (req, res)=>{
